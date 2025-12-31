@@ -1,0 +1,132 @@
+.preview-item {
+    background: var(--card-bg);
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: var(--shadow);
+    transition: all 0.3s ease;
+    height: fit-content;
+}
+
+.preview-item:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+}
+
+.preview-item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.preview-item-title {
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+.preview-item-type {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.type-post {
+    background: #E3F2FD;
+    color: #1976D2;
+}
+
+.type-video {
+    background: #FCE4EC;
+    color: #C2185B;
+}
+
+.canvas-wrapper {
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 15px;
+    background: #000;
+}
+
+.canvas-wrapper img {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+.preview-details {
+    margin-bottom: 15px;
+}
+
+.preview-details h4 {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    margin-bottom: 5px;
+}
+
+.preview-details p {
+    font-size: 0.95rem;
+    color: var(--text-primary);
+    word-break: break-word;
+}
+
+.music-info {
+    background: var(--bg-color);
+    padding: 10px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.music-info::before {
+    content: "🎵";
+}
+
+.duration-info {
+    background: #E3F2FD;
+    color: #1976D2;
+    padding: 8px 10px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    text-align: center;
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+.preview-item-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.btn-export {
+    flex: 1;
+    padding: 10px;
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-export:hover {
+    background: #c91d58;
+    transform: translateY(-2px);
+}
+
+.video-notice {
+    background: #FFF3CD;
+    color: #856404;
+    padding: 10px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    text-align: center;
+    margin-top: 10px;
+    border: 1px solid #FFE69C;
+    font-weight: 500;
+}

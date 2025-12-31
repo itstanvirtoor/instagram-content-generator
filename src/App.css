@@ -1,0 +1,21 @@
+.app {
+    max-width: 1400px;
+    margin: 0 auto;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.main-container {
+    background: var(--bg-color);
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: var(--shadow-lg);
+    flex: 1;
+}
+
+@media (max-width: 768px) {
+    .main-container {
+        padding: 20px;
+    }
+}
