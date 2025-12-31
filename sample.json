@@ -2,61 +2,51 @@
     "post_1": {
         "content": "Welcome to our new product launch! 🚀",
         "caption": "Exciting news coming your way! #ProductLaunch #Innovation #NewProduct #TechNews",
-        "music": "upbeat-intro.mp3",
         "type": "post"
     },
     "post_2": {
         "content": "Check out our latest video tutorial",
         "caption": "Learn something new today! 📚 #Tutorial #Learning #Education #SkillDevelopment",
-        "music": "background-music.mp3",
         "type": "video"
     },
     "post_3": {
         "content": "Special offer: 50% OFF this weekend only!",
         "caption": "Don't miss out on this amazing deal! 🎉 #Sale #Weekend #Discount #Shopping",
-        "music": "energetic-beat.mp3",
         "type": "post"
     },
     "post_4": {
         "content": "Behind the scenes of our creative process",
         "caption": "Creating magic ✨ #BehindTheScenes #Creative #Process #WorkInProgress",
-        "music": "chill-vibes.mp3",
         "type": "video"
     },
     "post_5": {
         "content": "Monday Motivation: You got this! 💪",
         "caption": "Start your week strong! #MondayMotivation #Success #Motivation #Goals",
-        "music": "motivational.mp3",
         "type": "post"
     },
     "post_6": {
         "content": "Quick tips for productivity",
         "caption": "Work smarter, not harder 🎯 #Productivity #Tips #WorkSmart #Efficiency",
-        "music": "focus-music.mp3",
         "type": "video"
     },
     "post_7": {
         "content": "Thank you for 10K followers! ❤️",
         "caption": "We couldn't have done it without you! #Milestone #ThankYou #Community #Grateful",
-        "music": "celebration.mp3",
         "type": "post"
     },
     "post_8": {
         "content": "New collection dropping soon!",
         "caption": "Stay tuned for something special! 👀 #ComingSoon #NewCollection #Fashion #Style",
-        "music": "teaser-music.mp3",
         "type": "video"
     },
     "post_9": {
         "content": "Weekend vibes ✨",
         "caption": "Time to relax and recharge! #Weekend #Relax #SelfCare #Vibes",
-        "music": "weekend-chill.mp3",
         "type": "post"
     },
     "post_10": {
         "content": "Transform your space with our design tips",
         "caption": "Simple changes, big impact! 🏡 #InteriorDesign #HomeDeco #DesignTips #HomeImprovement",
-        "music": "ambient-sound.mp3",
         "type": "video",
         "duration": 5
     }

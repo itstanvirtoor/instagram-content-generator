@@ -57,10 +57,6 @@ const PreviewItem = ({ item, showNotification }) => {
         <p>{item.caption}</p>
       </div>
       
-      <div className="music-info">
-        {item.music}
-      </div>
-      
       {item.type === 'video' && item.duration && (
         <div className="duration-info">
           ⏱️ Duration: {item.duration}s

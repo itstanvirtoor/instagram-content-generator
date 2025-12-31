@@ -70,22 +70,6 @@
     word-break: break-word;
 }
 
-.music-info {
-    background: var(--bg-color);
-    padding: 10px;
-    border-radius: 8px;
-    font-size: 0.9rem;
-    color: var(--text-secondary);
-    margin-bottom: 15px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.music-info::before {
-    content: "🎵";
-}
-
 .duration-info {
     background: #E3F2FD;
     color: #1976D2;

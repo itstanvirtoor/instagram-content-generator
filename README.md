@@ -12,7 +12,6 @@ A professional web application for creating Instagram posts and reels from JSON 
 - Export individual items or all content as a ZIP file
 - Drag & drop file upload
 - Real-time preview
-- Metadata export with captions and music info
 
 ## JSON Format
 
@@ -21,13 +20,11 @@ A professional web application for creating Instagram posts and reels from JSON 
     "post_1": {
         "content": "Your main content text here",
         "caption": "Your Instagram caption with #hashtags",
-        "music": "song-name.mp3",
         "type": "post"
     },
     "post_2": {
         "content": "Another content item",
         "caption": "Another caption",
-        "music": "another-song.mp3",
         "type": "video"
     }
 }
@@ -36,7 +33,6 @@ A professional web application for creating Instagram posts and reels from JSON 
 ### JSON Structure Requirements:
 - **content**: Main text to display on the visual (required)
 - **caption**: Instagram caption text (required)
-- **music**: Music file name or identifier (optional)
 - **type**: Either "post" (for images) or "video" (for reels) (required)
 
 ## Installation & Usage
@@ -68,7 +64,7 @@ npx http-server
 
 3. **Preview**: 
    - View all generated posts and reels
-   - Each item shows the visual, caption, and music info
+   - Each item shows the visual, and caption
 
 4. **Export**:
    - Export individual items as PNG files
@@ -123,11 +119,10 @@ Customize the template generation in `templates.js`:
 
 - Maximum 24 content items per upload
 - Generates static frames for videos (not actual video files)
-- Music is metadata only (not embedded in output)
 
 ## Future Enhancements
 
-- [ ] Video generation with music integration
+- [ ] Video generation
 - [ ] Custom font selection
 - [ ] Image upload for backgrounds
 - [ ] Animation effects for reels

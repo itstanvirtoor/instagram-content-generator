@@ -23,7 +23,7 @@ export const InstagramTemplates = {
     ],
     
     // Generate Instagram Post Template
-    createPostCanvas(content, colorIndex = 0) {
+    createPostCanvas(content, colorIndex = 0, customTemplate = null, watermark = 'Generated with IG Creator') {
         const canvas = new fabric.Canvas(null, {
             width: this.POST_WIDTH,
             height: this.POST_HEIGHT,
@@ -31,6 +31,29 @@ export const InstagramTemplates = {
         });
         
         const colors = this.colorSchemes[colorIndex % this.colorSchemes.length];
+        
+        // If custom template provided, use it as background
+        if (customTemplate) {
+            return new Promise((resolve) => {
+                fabric.Image.fromURL(customTemplate, (img) => {
+                    img.scaleToWidth(this.POST_WIDTH);
+                    img.scaleToHeight(this.POST_HEIGHT);
+                    img.set({
+                        left: 0,
+                        top: 0,
+                        selectable: false
+                    });
+                    canvas.add(img);
+                    
+                    // Add content text on top
+                    this.addContentText(canvas, content, colors, this.POST_WIDTH, this.POST_HEIGHT);
+                    this.addWatermark(canvas, colors, this.POST_WIDTH, this.POST_HEIGHT, watermark);
+                    
+                    canvas.renderAll();
+                    resolve(canvas);
+                }, { crossOrigin: 'anonymous' });
+            });
+        }
         
         // Background gradient
         const gradient = new fabric.Gradient({
@@ -83,24 +106,13 @@ export const InstagramTemplates = {
         canvas.add(contentText);
         
         // Add branding watermark
-        const watermark = new fabric.Text('Generated with IG Creator', {
-            left: this.POST_WIDTH / 2,
-            top: this.POST_HEIGHT - 50,
-            fontSize: 20,
-            fontFamily: 'Arial, sans-serif',
-            fill: colors.text,
-            opacity: 0.6,
-            originX: 'center',
-            originY: 'center'
-        });
-        
-        canvas.add(watermark);
+        this.addWatermark(canvas, colors, this.POST_WIDTH, this.POST_HEIGHT - 50, watermark);
         
         return canvas;
     },
     
     // Generate Instagram Reel/Video Template
-    createReelCanvas(content, colorIndex = 0) {
+    createReelCanvas(content, colorIndex = 0, customTemplate = null, watermark = 'Generated with IG Creator') {
         const canvas = new fabric.Canvas(null, {
             width: this.REEL_WIDTH,
             height: this.REEL_HEIGHT,
@@ -108,6 +120,30 @@ export const InstagramTemplates = {
         });
         
         const colors = this.colorSchemes[colorIndex % this.colorSchemes.length];
+        
+        // If custom template provided, use it as background
+        if (customTemplate) {
+            return new Promise((resolve) => {
+                fabric.Image.fromURL(customTemplate, (img) => {
+                    img.scaleToWidth(this.REEL_WIDTH);
+                    img.scaleToHeight(this.REEL_HEIGHT);
+                    img.set({
+                        left: 0,
+                        top: 0,
+                        selectable: false
+                    });
+                    canvas.add(img);
+                    
+                    // Add content text on top
+                    this.addContentText(canvas, content, colors, this.REEL_WIDTH, this.REEL_HEIGHT);
+                    // this.addPlayButton(canvas, colors);
+                    this.addWatermark(canvas, colors, this.REEL_WIDTH, this.REEL_HEIGHT - 80, watermark);
+                    
+                    canvas.renderAll();
+                    resolve(canvas);
+                }, { crossOrigin: 'anonymous' });
+            });
+        }
         
         // Background gradient
         const gradient = new fabric.Gradient({
@@ -163,18 +199,7 @@ export const InstagramTemplates = {
         this.addPlayButton(canvas, colors);
         
         // Add branding watermark
-        const watermark = new fabric.Text('IG Reel Creator', {
-            left: this.REEL_WIDTH / 2,
-            top: this.REEL_HEIGHT - 80,
-            fontSize: 24,
-            fontFamily: 'Arial, sans-serif',
-            fill: colors.text,
-            opacity: 0.7,
-            originX: 'center',
-            originY: 'center'
-        });
-        
-        canvas.add(watermark);
+        this.addWatermark(canvas, colors, this.REEL_WIDTH, this.REEL_HEIGHT - 80, watermark);
         
         return canvas;
     },
@@ -250,6 +275,46 @@ export const InstagramTemplates = {
         });
         
         canvas.add(playCircle, playTriangle);
+    },
+    
+    // Helper method to add content text
+    addContentText(canvas, content, colors, width, height) {
+        const contentText = new fabric.Textbox(content, {
+            left: width / 2,
+            top: height / 2,
+            width: width * 0.8,
+            fontSize: width === this.POST_WIDTH ? 60 : 70,
+            fontFamily: 'Arial, sans-serif',
+            fontWeight: 'bold',
+            fill: colors.text,
+            textAlign: 'center',
+            originX: 'center',
+            originY: 'center',
+            shadow: new fabric.Shadow({
+                color: 'rgba(0,0,0,0.5)',
+                blur: 20,
+                offsetX: 0,
+                offsetY: 5
+            })
+        });
+        
+        canvas.add(contentText);
+    },
+    
+    // Helper method to add watermark
+    addWatermark(canvas, colors, width, top, customWatermark = 'Generated with IG Creator') {
+        const watermark = new fabric.Text(customWatermark, {
+            left: width / 2,
+            top: top,
+            fontSize: width === this.POST_WIDTH ? 20 : 24,
+            fontFamily: 'Arial, sans-serif',
+            fill: colors.text,
+            opacity: 0.6,
+            originX: 'center',
+            originY: 'center'
+        });
+        
+        canvas.add(watermark);
     },
     
     // Export canvas as image

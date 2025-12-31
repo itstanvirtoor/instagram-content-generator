@@ -36,11 +36,12 @@ const validateJSON = (data) => {
 };
 
 // Generate single content item
-const generateSingleContent = async (key, item, index) => {
+const generateSingleContent = async (key, item, index, postTemplate = null, reelTemplate = null, watermark = 'Generated with IG Creator') => {
   try {
+    const template = item.type === 'post' ? postTemplate : reelTemplate;
     const canvas = item.type === 'post' 
-      ? InstagramTemplates.createPostCanvas(item.content, index)
-      : InstagramTemplates.createReelCanvas(item.content, index);
+      ? await InstagramTemplates.createPostCanvas(item.content, index, template, watermark)
+      : await InstagramTemplates.createReelCanvas(item.content, index, template, watermark);
     
     // Allow browser to render
     await new Promise(resolve => setTimeout(resolve, 10));
@@ -52,7 +53,6 @@ const generateSingleContent = async (key, item, index) => {
       type: item.type,
       content: item.content,
       caption: item.caption,
-      music: item.music || 'N/A',
       duration: item.type === 'video' ? (parseInt(item.duration) || 15) : null,
       canvas: canvas,
       imageData: imageData
@@ -64,7 +64,7 @@ const generateSingleContent = async (key, item, index) => {
 };
 
 // Generate content from JSON
-export const generateContentFromJSON = async (jsonData) => {
+export const generateContentFromJSON = async (jsonData, postTemplate = null, reelTemplate = null, watermark = 'Generated with IG Creator') => {
   validateJSON(jsonData);
   
   const generatedContent = [];
@@ -79,7 +79,7 @@ export const generateContentFromJSON = async (jsonData) => {
       await new Promise(resolve => setTimeout(resolve, 100));
     }
     
-    const contentItem = await generateSingleContent(key, item, i);
+    const contentItem = await generateSingleContent(key, item, i, postTemplate, reelTemplate, watermark);
     generatedContent.push(contentItem);
   }
   
@@ -161,7 +161,6 @@ export const exportAllContent = async (generatedContent, jsonData, onProgress) =
 Format: WebM video (${duration} seconds, static image)
 Dimensions: 1080x1920 (9:16 ratio)
 Caption: ${item.caption}
-Music: ${item.music}
 
 Note: This is a WEBM file. Instagram accepts MP4.
 To convert to MP4:
@@ -179,7 +178,6 @@ Content: ${item.content}`;
           format: 'WebM video (convert to MP4 for Instagram)',
           duration: `${duration} seconds convert to MP4 for Instagram)`,
           caption: item.caption,
-          music: item.music,
           content: item.content,
           specifications: '1080x1920, 9:16 ratio, static image video'
         };
@@ -194,7 +192,6 @@ Content: ${item.content}`;
           format: 'PNG (video generation failed)',
           note: 'Use video editing software to create video',
           caption: item.caption,
-          music: item.music,
           content: item.content
         };
       }
@@ -208,7 +205,6 @@ Content: ${item.content}`;
         type: 'post',
         format: 'PNG Image - Ready to upload',
         caption: item.caption,
-        music: item.music || 'N/A',
         content: item.content,
         specifications: '1080x1080, 1:1 ratio'
       };
@@ -249,7 +245,6 @@ Contains Instagram Reel videos (1080x1920)
    - Online: CloudConvert.com or FreeConvert.com
    - FFmpeg: ffmpeg -i input.webm -c:v libx264 output.mp4
 3. Upload MP4 to Instagram Reels
-4. Add music and captions as specified
 
 ## Video Format Details
 

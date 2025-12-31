@@ -13,6 +13,9 @@ function App() {
   const [generatedContent, setGeneratedContent] = useState([]);
   const [isProcessing, setIsProcessing] = useState(false);
   const [notification, setNotification] = useState(null);
+  const [postTemplate, setPostTemplate] = useState(null);
+  const [reelTemplate, setReelTemplate] = useState(null);
+  const [watermarkText, setWatermarkText] = useState('Generated with IG Creator');
 
   const showNotification = useCallback((message, type = 'info') => {
     setNotification({ message, type });
@@ -28,39 +31,33 @@ function App() {
       post_1: {
         content: 'Welcome to our new product launch! 🚀',
         caption: 'Exciting news coming your way! #ProductLaunch #Innovation',
-        music: 'upbeat-intro.mp3',
         type: 'post'
       },
       post_2: {
         content: 'Check out our latest video tutorial',
         caption: 'Learn something new today! 📚 #Tutorial #Learning',
-        music: 'background-music.mp3',
         type: 'video',
         duration: 20
       },
       post_3: {
         content: 'Special offer: 50% OFF this weekend only!',
         caption: 'Don\'t miss out on this amazing deal! 🎉 #Sale #Weekend',
-        music: 'energetic-beat.mp3',
         type: 'post'
       },
       post_4: {
         content: 'Behind the scenes of our creative process',
         caption: 'Creating magic ✨ #BehindTheScenes #Creative',
-        music: 'chill-vibes.mp3',
         type: 'video',
         duration: 30
       },
       post_5: {
         content: 'Monday Motivation: You got this! 💪',
         caption: 'Start your week strong! #MondayMotivation #Success',
-        music: 'motivational.mp3',
         type: 'post'
       },
       post_6: {
         content: 'Quick tips for productivity',
         caption: 'Work smarter, not harder 🎯 #Productivity #Tips',
-        music: 'focus-music.mp3',
         type: 'video',
         duration: 15
       }
@@ -82,17 +79,18 @@ function App() {
       const parsedData = JSON.parse(jsonText);
       setJsonData(parsedData);
       
-      const content = await generateContentFromJSON(parsedData);
+      const content = await generateContentFromJSON(parsedData, postTemplate, reelTemplate, watermarkText);
       setGeneratedContent(content);
       
-      showNotification(`Successfully generated ${content.length} content items!`, 'success');
+      const templateMsg = (postTemplate || reelTemplate) ? ' with custom template(s)' : '';
+      showNotification(`Successfully generated ${content.length} content items${templateMsg}!`, 'success');
     } catch (error) {
       showNotification(`Error: ${error.message}`, 'error');
       console.error('Processing error:', error);
     } finally {
       setIsProcessing(false);
     }
-  }, [jsonText, showNotification]);
+  }, [jsonText, postTemplate, reelTemplate, showNotification]);
 
   const handleExportAll = useCallback(async (onProgress) => {
     try {
@@ -116,6 +114,30 @@ function App() {
     setGeneratedContent([]);
   }, []);
 
+  const handlePostTemplateUpload = useCallback((templateDataUrl) => {
+    setPostTemplate(templateDataUrl);
+    showNotification('Post template uploaded successfully!', 'success');
+  }, [showNotification]);
+
+  const handleReelTemplateUpload = useCallback((templateDataUrl) => {
+    setReelTemplate(templateDataUrl);
+    showNotification('Reel template uploaded successfully!', 'success');
+  }, [showNotification]);
+
+  const handleRemovePostTemplate = useCallback(() => {
+    setPostTemplate(null);
+    showNotification('Post template removed', 'info');
+  }, [showNotification]);
+
+  const handleRemoveReelTemplate = useCallback(() => {
+    setReelTemplate(null);
+    showNotification('Reel template removed', 'info');
+  }, [showNotification]);
+
+  const handleWatermarkChange = useCallback((text) => {
+    setWatermarkText(text);
+  }, []);
+
   return (
     <div className="app">
       <Header />
@@ -130,6 +152,14 @@ function App() {
           showNotification={showNotification}
           onClearAll={handleClearAll}
           hasProcessSection={generatedContent.length > 0}
+          postTemplate={postTemplate}
+          reelTemplate={reelTemplate}
+          onPostTemplateUpload={handlePostTemplateUpload}
+          onReelTemplateUpload={handleReelTemplateUpload}
+          onRemovePostTemplate={handleRemovePostTemplate}
+          onRemoveReelTemplate={handleRemoveReelTemplate}
+          watermarkText={watermarkText}
+          onWatermarkChange={handleWatermarkChange}
         />
 
         {generatedContent.length > 0 && (

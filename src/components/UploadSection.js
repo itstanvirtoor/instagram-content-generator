@@ -9,9 +9,19 @@ const UploadSection = ({
   isProcessing,
   showNotification,
   onClearAll,
-  hasProcessSection
+  hasProcessSection,
+  postTemplate,
+  reelTemplate,
+  onPostTemplateUpload,
+  onReelTemplateUpload,
+  onRemovePostTemplate,
+  onRemoveReelTemplate,
+  watermarkText,
+  onWatermarkChange
 }) => {
   const fileInputRef = useRef(null);
+  const postTemplateInputRef = useRef(null);
+  const reelTemplateInputRef = useRef(null);
   const [uploadedFile, setUploadedFile] = useState(null);
 
   const handleFileUpload = useCallback((event) => {
@@ -112,6 +122,97 @@ const UploadSection = ({
     showNotification('File removed and data cleared', 'success');
   }, [onClearAll, showNotification]);
 
+  const validateImageAspectRatio = useCallback((file, requiredRatio, templateType, onSuccess) => {
+    const reader = new FileReader();
+    
+    reader.onerror = () => {
+      showNotification('Error reading image. Please try again.', 'error');
+    };
+    
+    reader.onload = (e) => {
+      const img = new Image();
+      
+      img.onerror = () => {
+        showNotification('Invalid image file. Please upload a valid image.', 'error');
+      };
+      
+      img.onload = () => {
+        const aspectRatio = img.width / img.height;
+        const tolerance = 0.05; // 5% tolerance
+        
+        if (Math.abs(aspectRatio - requiredRatio) > tolerance) {
+          const ratioText = requiredRatio === 1 ? '1:1 (square)' : '9:16 (vertical)';
+          const actualRatioText = aspectRatio.toFixed(2);
+          showNotification(
+            `Invalid aspect ratio for ${templateType}! Required: ${ratioText}. Your image: ${actualRatioText}:1. Please upload a different image.`,
+            'error'
+          );
+          return;
+        }
+        
+        onSuccess(e.target.result);
+      };
+      
+      img.src = e.target.result;
+    };
+    
+    reader.readAsDataURL(file);
+  }, [showNotification]);
+
+  const handlePostTemplateUpload = useCallback((event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    
+    const file = event.target.files[0];
+    if (file) {
+      if (!file.type.startsWith('image/')) {
+        showNotification('Please upload a valid image file (PNG, JPG, etc.)', 'error');
+        return;
+      }
+      
+      const maxSize = 10 * 1024 * 1024; // 10MB
+      if (file.size > maxSize) {
+        showNotification('Image too large. Maximum size is 10MB', 'error');
+        return;
+      }
+      
+      validateImageAspectRatio(file, 1, 'Post Template (1:1)', onPostTemplateUpload);
+    }
+    
+    event.target.value = '';
+  }, [showNotification, validateImageAspectRatio, onPostTemplateUpload]);
+
+  const handleReelTemplateUpload = useCallback((event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    
+    const file = event.target.files[0];
+    if (file) {
+      if (!file.type.startsWith('image/')) {
+        showNotification('Please upload a valid image file (PNG, JPG, etc.)', 'error');
+        return;
+      }
+      
+      const maxSize = 10 * 1024 * 1024; // 10MB
+      if (file.size > maxSize) {
+        showNotification('Image too large. Maximum size is 10MB', 'error');
+        return;
+      }
+      
+      validateImageAspectRatio(file, 9/16, 'Reel Template (9:16)', onReelTemplateUpload);
+    }
+    
+    event.target.value = '';
+  }, [showNotification, validateImageAspectRatio, onReelTemplateUpload]);
+
+  const handlePostTemplateClick = useCallback(() => {
+    postTemplateInputRef.current?.click();
+  }, []);
+
+  const handleReelTemplateClick = useCallback(() => {
+    reelTemplateInputRef.current?.click();
+  }, []);
+
   return (
     <section className={`upload-section ${hasProcessSection ? 'has-process-section' : ''}`}>
       <div className="upload-card">
@@ -176,7 +277,7 @@ const UploadSection = ({
           className="json-editor"
           value={jsonText}
           onChange={(e) => onJsonTextChange(e.target.value)}
-          placeholder='{"post_1": {"content": "Your content here", "caption": "Your caption", "music": "song.mp3", "type": "post"}}'
+          placeholder='{"post_1": {"content": "Your content here", "caption": "Your caption", "type": "post"}}'
         />
         <button 
           className="btn btn-primary" 
@@ -191,6 +292,103 @@ const UploadSection = ({
             'Process Content'
           )}
         </button>
+      </div>
+
+      <div className="upload-card template-card">
+        <h2>Post Template - 1:1 Square (Optional)</h2>
+        <div 
+          className={`upload-area template-area ${postTemplate ? 'has-template' : ''}`}
+          onClick={handlePostTemplateClick}
+        >
+          {postTemplate ? (
+            <>
+              <img src={postTemplate} alt="Post Template" className="template-preview" />
+              <p className="template-status">📸 Post Template Ready (1:1)</p>
+            </>
+          ) : (
+            <>
+              <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                <polyline points="21 15 16 10 5 21"></polyline>
+              </svg>
+              <p>Upload square image template for posts (1:1 ratio)</p>
+              <p className="template-hint">1080x1080 or similar square dimensions (max 10MB)</p>
+            </>
+          )}
+          <input 
+            type="file" 
+            ref={postTemplateInputRef}
+            accept="image/*" 
+            onChange={handlePostTemplateUpload}
+            style={{ display: 'none' }}
+          />
+        </div>
+        {postTemplate && (
+          <div className="button-group">
+            <button 
+              className="btn btn-secondary" 
+              onClick={onRemovePostTemplate}
+            >
+              Remove Post Template
+            </button>
+          </div>
+        )}
+      </div>
+
+      <div className="upload-card template-card">
+        <h2>Reel Template - 9:16 Vertical (Optional)</h2>
+        <div 
+          className={`upload-area template-area ${reelTemplate ? 'has-template' : ''}`}
+          onClick={handleReelTemplateClick}
+        >
+          {reelTemplate ? (
+            <>
+              <img src={reelTemplate} alt="Reel Template" className="template-preview reel-preview" />
+              <p className="template-status">🎬 Reel Template Ready (9:16)</p>
+            </>
+          ) : (
+            <>
+              <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                <polyline points="21 15 16 10 5 21"></polyline>
+              </svg>
+              <p>Upload vertical image template for reels (9:16 ratio)</p>
+              <p className="template-hint">1080x1920 or similar vertical dimensions (max 10MB)</p>
+            </>
+          )}
+          <input 
+            type="file" 
+            ref={reelTemplateInputRef}
+            accept="image/*" 
+            onChange={handleReelTemplateUpload}
+            style={{ display: 'none' }}
+          />
+        </div>
+        {reelTemplate && (
+          <div className="button-group">
+            <button 
+              className="btn btn-secondary" 
+              onClick={onRemoveReelTemplate}
+            >
+              Remove Reel Template
+            </button>
+          </div>
+        )}
+      </div>
+      
+      <div className="upload-card watermark-card">
+        <h3>Custom Watermark Text</h3>
+        <input 
+          type="text"
+          className="watermark-input"
+          value={watermarkText}
+          onChange={(e) => onWatermarkChange(e.target.value)}
+          placeholder="Enter your custom watermark text"
+          maxLength={50}
+        />
+        <p className="watermark-hint">This text will appear at the bottom of all generated posts and reels</p>
       </div>
     </section>
   );
