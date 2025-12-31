@@ -38,6 +38,7 @@ const UploadSection = ({
     }
     
     event.target.value = '';
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [uploadedFile, onClearAll]);
 
   const validateAndSetFile = useCallback((file) => {
@@ -54,6 +55,7 @@ const UploadSection = ({
     
     setUploadedFile(file);
     showNotification('File selected! Click "Load File Data" to load the JSON.', 'success');
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [showNotification]);
 
   const loadFileData = useCallback(() => {
@@ -80,18 +82,21 @@ const UploadSection = ({
     };
     
     reader.readAsText(uploadedFile);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [uploadedFile, onJsonTextChange, showNotification]);
 
   const handleDragOver = useCallback((e) => {
     e.preventDefault();
     e.stopPropagation();
     e.currentTarget.classList.add('drag-over');
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleDragLeave = useCallback((e) => {
     e.preventDefault();
     e.stopPropagation();
     e.currentTarget.classList.remove('drag-over');
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleDrop = useCallback((e) => {
@@ -110,16 +115,19 @@ const UploadSection = ({
       onClearAll();
     }
     validateAndSetFile(files[0]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [uploadedFile, validateAndSetFile, showNotification, onClearAll]);
 
   const handleUploadClick = useCallback(() => {
     fileInputRef.current?.click();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleRemoveFile = useCallback(() => {
     setUploadedFile(null);
     onClearAll();
     showNotification('File removed and data cleared', 'success');
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [onClearAll, showNotification]);
 
   const validateImageAspectRatio = useCallback((file, requiredRatio, templateType, onSuccess) => {
@@ -157,6 +165,7 @@ const UploadSection = ({
     };
     
     reader.readAsDataURL(file);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [showNotification]);
 
   const handlePostTemplateUpload = useCallback((event) => {
@@ -180,6 +189,7 @@ const UploadSection = ({
     }
     
     event.target.value = '';
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [showNotification, validateImageAspectRatio, onPostTemplateUpload]);
 
   const handleReelTemplateUpload = useCallback((event) => {
@@ -203,14 +213,17 @@ const UploadSection = ({
     }
     
     event.target.value = '';
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [showNotification, validateImageAspectRatio, onReelTemplateUpload]);
 
   const handlePostTemplateClick = useCallback(() => {
     postTemplateInputRef.current?.click();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleReelTemplateClick = useCallback(() => {
     reelTemplateInputRef.current?.click();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

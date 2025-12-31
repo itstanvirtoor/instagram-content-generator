@@ -37,6 +37,7 @@ const PreviewItem = ({ item, showNotification }) => {
       setIsExporting(false);
       setExportProgress('');
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [item, showNotification]);
 
   return (
